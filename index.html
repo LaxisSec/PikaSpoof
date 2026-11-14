@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#b51224">
+  <title>PokéRadar — Pokémon GO Community</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><span class="brand-ball">◉</span><span>POKÉ<span>RADAR</span></span></a>
+  <nav><a href="#map-section">Hotspots</a><a href="#pokemon-section">Pokémon</a><a href="#trainers-section">Trainers</a></nav>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">POKÉMON GO COMMUNITY HUB</p>
+      <h1>Find places.<br><span>Meet trainers.</span><br>Trade Pokémon.</h1>
+      <p class="hero-sub">Explore community-reported places, share Pokémon offers, and connect with other Trainers.</p>
+      <div class="hero-actions"><a class="btn primary" href="#map-section">Explore hotspots</a><a class="btn secondary" href="#pokemon-section">Browse Pokémon</a></div>
+      <p class="fineprint">Community tool — not affiliated with or endorsed by Niantic or Pokémon.</p>
+    </div>
+    <div class="hero-art" aria-hidden="true"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="pokeball"><div class="ball-center"></div></div><div class="spark s1">✦</div><div class="spark s2">✧</div></div>
+  </section>
+
+  <section class="stats">
+    <div><strong>FREE</strong><span>Hotspot finder</span></div>
+    <div><strong>TRAINER</strong><span>Friend codes</span></div>
+    <div><strong>COMMUNITY</strong><span>Trade listings</span></div>
+  </section>
+
+  <section class="section" id="map-section">
+    <div class="section-heading"><div><p class="eyebrow">EXPLORE THE MAP</p><h2>Community hotspots</h2><p class="muted">Search for public parks, plazas, and popular gathering places. These are location suggestions, not verified live spawns, PokéStops, or Gyms.</p></div><span class="tag">FREE ACCESS</span></div>
+    <div class="map-tools">
+      <input id="place-search" placeholder="Search a city or place (e.g. Chicago)" aria-label="Search a city or place">
+      <button class="btn primary" id="search-place">Search</button>
+      <button class="btn secondary" id="use-location">Use my location</button>
+    </div>
+    <div class="map-layout"><div id="map" role="application" aria-label="Map of community places"></div><aside class="map-side"><h3>Map guide</h3><div class="legend"><i class="dot park"></i><span>Parks & green spaces</span></div><div class="legend"><i class="dot plaza"></i><span>Plazas & public squares</span></div><div class="legend"><i class="dot attraction"></i><span>Attractions</span></div><div class="side-note"><strong>Tip</strong><p>Check local rules, opening hours, and safety before visiting. Respect private property and never play while driving.</p></div><p id="map-status" class="status">Map loading…</p></aside></div>
+  </section>
+
+  <section class="section" id="pokemon-section">
+    <div class="section-heading"><div><p class="eyebrow">COMMUNITY TRADING</p><h2>Pokémon listings</h2><p class="muted">Browse Pokémon other Trainers say they can offer, or post what you're looking for. Listings are trade requests only.</p></div><button class="btn primary" id="open-listing">＋ Add a listing</button></div>
+    <div class="filters"><input id="pokemon-filter" placeholder="Filter by Pokémon, CP, or notes"><select id="listing-type"><option value="all">All listings</option><option value="offer">Offering</option><option value="wanted">Looking for</option></select></div>
+    <div id="pokemon-grid" class="pokemon-grid"></div>
+    <p class="empty hidden" id="pokemon-empty">No listings match that search yet. Add the first one!</p>
+    <div class="notice"><strong>Trading reminder:</strong> Pokémon GO trades happen in the official game and follow its distance, Stardust, and special-trade rules. Never share your account password or login codes.</div>
+  </section>
+
+  <section class="section" id="trainers-section">
+    <div class="section-heading"><div><p class="eyebrow">CONNECT WITH TRAINERS</p><h2>Trainer board</h2><p class="muted">Share a Trainer nickname and Friend Code so other players can add you.</p></div><button class="btn primary" id="open-trainer">＋ Add friend code</button></div>
+    <div id="trainer-grid" class="trainer-grid"></div>
+    <p class="empty hidden" id="trainer-empty">No Trainer codes posted yet.</p>
+  </section>
+</main>
+<footer><div class="brand"><span class="brand-ball">◉</span><span>POKÉ<span>RADAR</span></span></div><p>Fan-made community project. Pokémon and Pokémon GO are trademarks of their respective owners.</p><p class="footer-small">Hotspot suggestions are based on public map data and do not represent live game data.</p></footer>
+
+<dialog id="listing-dialog">
+  <form method="dialog" id="listing-form">
+    <div class="dialog-head"><div><p class="eyebrow">COMMUNITY LISTING</p><h2>Add Pokémon listing</h2></div><button class="x" value="cancel" aria-label="Close">×</button></div>
+    <label>Listing type<select id="new-type"><option value="offer">I'm offering</option><option value="wanted">I'm looking for</option></select></label>
+    <label>Pokémon name<input id="new-name" required maxlength="35" placeholder="e.g. Pikachu"></label>
+    <label>Pokémon image URL <input id="new-image" type="url" placeholder="Optional image link"></label>
+    <div class="two"><label>CP<input id="new-cp" type="number" min="0" max="10000" placeholder="e.g. 1250"></label><label>IV (optional)<input id="new-iv" placeholder="e.g. 3★ or 91%"></label></div>
+    <label>Details / what you want in return<textarea id="new-notes" maxlength="240" placeholder="Add useful details. Do not include account credentials."></textarea></label>
+    <label>Trainer nickname (optional)<input id="new-owner" maxlength="30" placeholder="Your Trainer nickname"></label>
+    <p class="form-note">Listings are saved in this browser only. This demo has no shared server or payment processing.</p>
+    <button class="btn primary full" value="default">Publish listing</button>
+  </form>
+</dialog>
+
+<dialog id="trainer-dialog">
+  <form method="dialog" id="trainer-form">
+    <div class="dialog-head"><div><p class="eyebrow">TRAINER BOARD</p><h2>Add Friend Code</h2></div><button class="x" value="cancel" aria-label="Close">×</button></div>
+    <label>Trainer nickname<input id="trainer-name" required maxlength="30" placeholder="Your nickname"></label>
+    <label>12-digit Friend Code<input id="trainer-code" required inputmode="numeric" maxlength="14" placeholder="1234 5678 9012"></label>
+    <label>Optional note<input id="trainer-note" maxlength="100" placeholder="e.g. Looking for raid friends"></label>
+    <p class="form-note">Only share a Friend Code. Never share your password, recovery details, or verification codes.</p>
+    <button class="btn primary full" value="default">Add to Trainer board</button>
+  </form>
+</dialog>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
